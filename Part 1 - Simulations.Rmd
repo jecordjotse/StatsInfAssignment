@@ -6,25 +6,77 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+library(Hmisc)
+knitr::opts_chunk$set(echo = TRUE, fig.width = 8)
+set.seed(2020)
 ```
 
-## Overview
+## Overview {#intro}
 
-The mean for an exponential distribution with lambda, $\lambda$, 0.2 is 5 since mean = $\frac{1}{\lambda}$ <http://rmarkdown.rstudio.com>.
+The mean and standard deviation for an exponential distribution with lambda, $\lambda$, 0.2 is 5 since mean = $\frac{1}{\lambda}$ and standard deviation = $\sqrt(var) = \sqrt(\frac{1}{\lambda^{2}}) = \frac{1}{\lambda}$. In this experiment, the Central Limiting Theory, CTL would be used to figure out this mean through experiments and simulations. Detailed code and simulation explanations can be found here in the [link to my repo](https://github.com/jecordjotse/StatsInfAssignment).
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
-summary(cars)
+
+## Simulations {#sima}
+Here a thousand simulations where made, each retrieving the mean of 40 exponentials. This distribution is stored in a $42 \times 1000$ matrix with columns storing the sample of size 40 and the last rows, 41 & 42, sotres the mean of the samples from row 1 to 40 and their respective variance respectively. For a thousand simulations the column number becomes 1000.
+```{r }
+lambda = 0.2
+mean <- 1/lambda           # Theoritical Mean
+sd <- 1/lambda             # Theoritical Standard Deviation
+var <- sd^2                # and variance
+## To make a 1000 simulations with a for loop
+sim_mat <- NULL
+for (i in 1 : 1000){
+  expObs <- rexp(40,0.2)
+  sim_mat <- cbind(         # Adding simulations by
+      sim_mat,              # attaching new columns
+        c(
+          expObs,           # 40 exponentials
+          mean(expObs),     # adding their mean to at row 41
+          var(expObs)       # adding their variance at row 42
+          )
+        )
+}
+
+sampleMean <- sim_mat[41,]
+sample_Variance_Distribution <- sim_mat[42,]
+summary(sampleMean)
 ```
 
-## Including Plots
+## Sample Mean vs Theoretical Mean
 
-You can also embed plots, for example:
+Knowing that the sample mean is a good estimator of the population mean. So ploting the histogram of means shows this as it balances around 5.
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r  echo=FALSE}
+hist(sampleMean, main="Histogram of Sample Mean", xlab="Sample Mean")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+This can be confirmed as the average of sample mean is below which is close to 5.
+
+```{r }
+mean(sampleMean)
+```
+
+
+## Sample Variance vs Theoretical Variance
+As seen with the distribution of sample means, the sample variance estimates the population variance. Taking average yields
+
+```{r }
+mean(sample_Variance_Distribution)
+```
+
+```{r echo=FALSE}
+d <- density(sample_Variance_Distribution)
+plot(d, xlab="Sample Variance", main="Desnsity Distribution of Sample Variance")
+axis(1,at=round(mean(sample_Variance_Distribution),2),las = 2)
+abline(v=mean(sample_Variance_Distribution), col="blue")
+```
+
+## Distribution
+``` {r echo=FALSE}
+hist(sampleMean, freq = FALSE, main = "Histogram of Distribution of 1000 averages") # histograph of the distribution of 1000 sample means
+curve(dnorm(x,mean=mean(sampleMean),sd=sd(sampleMean)), add=TRUE, col="red") # The Distribution is aproximately a normal
+```
+The CLT states that the distribution of averages of iid variables becomes that of a standard
+normal as the sample size increases. It can be seen than the Figure above shows an approximation to a normal as the bell-curve shape overlays it.
+
