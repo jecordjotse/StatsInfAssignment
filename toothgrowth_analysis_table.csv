@@ -1,0 +1,16 @@
+,,,,,
+Comparison Value,Conditions,conf.lower,conf.higher,P-value,Reject Hypothesis
+,,,,,
+Dosages 0.5 – 1,All Supplies,-11.983781,-6.276219,1.27E-07,Reject
+,VC supply,-11.265712,-6.314288,6.81E-07,Reject
+,OJ,-13.415634,-5.524366,8.79E-05,Reject
+Dosages 0.5 – 2,All Supplies,-16.335241,-9.324759,1.32E-06,Reject
+,VC supply,-21.90151,-14.41849,4.68E-08,Reject
+,OJ,-16.335241,-9.324759,1.32E-06,Reject
+Dosages 1 – 2,All Supplies,-8.996481,-3.733519,1.91E-05,Reject
+,VC supply,-13.054267,-5.685733,9.16E-05,Reject
+,OJ,-6.5314425,-0.1885575,3.92E-02,Reject
+Supply VC – OJ,All Dosages,-0.1710156,7.5710156,0.06063,"Failed for two sided, Reject for one sided"
+,Dosage 0.5,1.719057,8.780943,0.006359,Reject
+,Dosage 1,2.802148,9.057852,0.001038,Reject
+,Dosage 2,-3.79807,3.63807,0.9639,"Failed for two sided, failed for one sided"

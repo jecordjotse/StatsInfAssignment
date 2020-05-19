@@ -1,0 +1,69 @@
+---
+title: "Basis Inferential Data Analysis"
+author: "Jerome Cordjotse"
+date: "5/19/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(datasets)
+library(ggplot2)
+library(dplyr)
+knitr::opts_chunk$set(echo = TRUE,fig.width = 7,fig.height = 5)
+set.seed(2020)
+```
+
+## Overview {#intro}
+```{r ToothGrowth, echo=TRUE, warning=FALSE, eval=FALSE}
+?ToothGrowth
+```
+The length of odontoblasts (cells responsible for tooth growth) in 60 guinea pigs is taken as each animal received one of three dose levels of vitamin C (0.5, 1, and 2 mg/day) by orange juice 'OJ' or ascorbic acid (a form of vitamin C)  'VC'. This data set is going to be analyzed with various tools. Detailed code and simulation explanations can be found here in the [link to my repo](https://github.com/jecordjotse/StatsInfAssignment).
+
+## Data Summary and Basic Exploratory Analysis
+```{r echo=TRUE}
+data("ToothGrowth")
+str(ToothGrowth)
+head(ToothGrowth)
+```
+Using Exploratory Plot example from the help file
+
+```{r echo=FALSE}
+require(graphics)
+coplot(len ~ dose | supp, data = ToothGrowth, panel = panel.smooth,
+       xlab = "ToothGrowth data: length vs dose, given type of supplement", ylab = "length")
+```
+
+```{r }
+summary(ToothGrowth)
+```
+The Means are grouped into dosage and supply type.
+```{r two-colum ,echo=FALSE,results='asis'}
+
+ToothGrowth$mean <- ave(ToothGrowth$len,ToothGrowth$dose,ToothGrowth$supp)
+#for(i in c('latex','html','markdown','pandoc','rst')){
+  summa <- data.frame(summarize(group_by(ToothGrowth,supp,dose,mean)))
+  colnames(summa) <- c("Supply", "Dosage", "Mean Length of Growth")
+  levels(summa$Supply) <- c("Orange Juice  `OJ`","Ascorbic Acid `VC`") 
+  knitr::kable(summa)
+```
+
+## Comparison Using the Student's T Test
+With the Null Hypothesis as: The True mean Difference is equal to 0. This means the comparisons are based on the assumption that the length of growth are aproximately equal for all sample tests.
+```{r echo=FALSE}
+data <- read.csv("toothgrowth_analysis_table.csv")[-(1:2),]
+colnames(data) <- c("Comparison", "Groups", "Conf-Int Lower", "Conf-Int Upper", "P-value", "Reject Hypothesis")
+rownames(data) <- NULL
+knitr::kable(data)
+```
+
+The confidence interval of camparisons grouped into various sections are calculated for wiht the t.test() function. The P-values are retrived also and place in a table format.
+
+# Remarks
+Assumptions made : True difference in means is equal to 0. The growth rate of odontoblasts is equal for all dosages and supply types.
+We reject the Null Hypothesis for all the comparisons between dosages, signifying that the dosages affect the length of the growth of the odontoblasts. The specific correlation is seen from the ToothGrowth Data figure above which is the higher the dose the higher the growth.
+
+For the comparisons between Orange Juice (OJ) and Asorbic Asid (VC), it is seen that we reject for lower dosages. The confidence interval of the 2 mg/day  dosage includes a Zero, 0. Hence we fail to reject because the P-value is greate than 5% for both tow-sided and all one-sided test. We infere that for higher dosages there is little difference in supply methods' effect on the growth of odontoblasts.
+Finally for a combined group of all dosages, we find out that we reject for the one-sided test, $\frac{1}{0.06063} = 0.030315$ but failed to reject for the two-sided test. The one-sided Alternative Hypothesis states : true difference in means is greater than 0.
+
+# Conclusion
+For lower dosages the Orange Juice (OJ) has a greater effect. As dose level increases, the effect is almost similar.

@@ -49,6 +49,7 @@ Knowing that the sample mean is a good estimator of the population mean. So plot
 
 ```{r  echo=FALSE}
 hist(sampleMean, main="Histogram of Sample Mean", xlab="Sample Mean")
+abline(v=mean(sampleMean), col="blue", lwd = '2')
 ```
 
 This can be confirmed as the average of sample mean is below which is close to 5.
@@ -76,6 +77,7 @@ abline(v=mean(sample_Variance_Distribution), col="blue")
 ``` {r echo=FALSE}
 hist(sampleMean, freq = FALSE, main = "Histogram of Distribution of 1000 averages") # histograph of the distribution of 1000 sample means
 curve(dnorm(x,mean=mean(sampleMean),sd=sd(sampleMean)), add=TRUE, col="red") # The Distribution is aproximately a normal
+abline(v=mean(sampleMean), col="blue", lwd = '2')
 ```
 The CLT states that the distribution of averages of iid variables becomes that of a standard
 normal as the sample size increases. It can be seen than the Figure above shows an approximation to a normal as the bell-curve shape overlays it.
